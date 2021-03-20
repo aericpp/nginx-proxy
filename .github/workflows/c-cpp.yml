@@ -22,17 +22,18 @@ jobs:
     steps:
     - name: Clone source code
       run: |
+        cur_path=`pwd`
         git clone https://github.com/openssl/openssl.git -b OpenSSL_1_1_1-stable openssl
         git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
-        git clone https://github.com/nginx/nginx.git -b nginx-1.19.7-RELEASE nginx
-        #git clone https://github.com/nginx/nginx.git
+        git clone https://github.com/nginx/nginx.git
         cd nginx
+        git checkout release-1.19.6
         mv auto/configure configure
         #wget http://nginx.org/download/nginx-1.19.8.tar.gz
         #tar xzvf nginx-1.19.8.tar.gz
         #cd nginx-1.19.8
         patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_1018.patch
-        ./configure  --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=/var/log/nginx/error.log --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --modules-path=/usr/lib/nginx/modules --http-client-body-temp-path=/var/lib/nginx/body --http-proxy-temp-path=/var/lib/nginx/proxy --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --without-http_memcached_module --without-http_uwsgi_module --without-http_scgi_module --with-http_gzip_static_module --with-http_ssl_module --with-http_stub_status_module --with-http_v2_module --with-openssl=/home/runner/work/nginx-workflow/openssl --with-openssl-opt=enable-tls1_3 --with-stream --with-stream_ssl_module --add-module=/home/runner/work/nginx-workflow/ngx_http_proxy_connect_module
+        ./configure  --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=/var/log/nginx/error.log --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --modules-path=/usr/lib/nginx/modules --http-client-body-temp-path=/var/lib/nginx/body --http-proxy-temp-path=/var/lib/nginx/proxy --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --without-http_memcached_module --without-http_uwsgi_module --without-http_scgi_module --with-http_gzip_static_module --with-http_ssl_module --with-http_stub_status_module --with-http_v2_module --with-openssl="$cur_path/openssl" --with-openssl-opt=enable-tls1_3 --with-stream --with-stream_ssl_module --add-module="$cur_path/ngx_http_proxy_connect_module"
         make
         
     - name : Upload artifact
