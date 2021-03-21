@@ -1,0 +1,16 @@
+Package: nginx
+Version: %%version%%
+Section: httpd
+Depends: 
+Priority:optional
+Maintainer: noone <pkg-nginx-maintainers@alioth-lists.debian.net>
+Architecture: amd64
+Installed-Size: %%size%%
+Homepage: https://nginx.net
+Description:  small, powerful, scalable web/proxy server - common files
+ Nginx ("engine X") is a high-performance web and reverse proxy server
+ created by Igor Sysoev. It can be used both as a standalone web server
+ and as a proxy to reduce the load on back-end HTTP or mail servers.
+ .
+ This package contains base configuration files used by all versions of
+ nginx.
