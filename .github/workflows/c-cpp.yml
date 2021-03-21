@@ -48,7 +48,13 @@ jobs:
         NG_PKG_VERSION=`cat nginx/src/core/nginx.h |grep "#define NGINX_VERSION" | awk '{print $3}' | sed 's/"//g'`
         sed -e "s|%%SIZE%%|${NG_PKG_SIZE}|" -e "s|%%VERSION%%|${NG_PKG_VERSION}|" < control_tmpl > nginx_debian/DEBIAN/control
         dpkg -b nginx_debian nginx_proxy.deb
-
+        test -d "nginx_debian/var/lib/nginx" || mkdir -p "nginx_debian/var/lib/nginx"        
+        test -d "nginx_debian/var/log/nginx" || mkdir -p "nginx_debian/var/log/nginx"
+        test -d "nginx_debian/var/www/html" || mkdir -p "nginx_debian/var/www/html"
+        test -d "nginx_debian/etc/nginx/modules-available" || mkdir -p "nginx_debian/etc/nginx/modules-available"
+        test -d "nginx_debian/etc/nginx/modules-enabled" || mkdir -p "nginx_debian/etc/nginx/modules-enabled"
+        test -d "nginx_debian/etc/nginx/conf.d" || mkdir -p "nginx_debian/etc/nginx/conf.d"
+        test -d "nginx_debian/etc/nginx/sites-enabled" || mkdir -p "nginx_debian/etc/nginx/sites-enabled"
     - name : Upload artifact
       uses: actions/upload-artifact@master
       with:
