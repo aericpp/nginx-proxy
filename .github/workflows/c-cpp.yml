@@ -55,6 +55,6 @@ jobs:
     - name: release
       uses: ncipollo/release-action@v1
       with:
-        artifacts: "release.tar.gz"
+        artifacts: "nginx_proxy.deb"
         bodyFile: "nginx_proxy.deb"
         token: ${{ secrets.GITHUB_TOKEN }}
