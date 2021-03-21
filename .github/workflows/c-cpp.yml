@@ -1,18 +1,9 @@
 name: build nginx
 
 on:
-  repository_dispatch:
-    workflow_dispatch:
-      inputs:
-        ssh:
-          description: 'SSH connection to Actions'
-          required: false
-          default: 'false'
-
   push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
+    tags:
+    - '*'
 
 jobs:
   build:
