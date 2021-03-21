@@ -1,11 +1,11 @@
 Package: nginx
-Version: %%version%%
+Version: %%VERSION%%
 Section: httpd
 Depends: 
 Priority:optional
 Maintainer: noone <pkg-nginx-maintainers@alioth-lists.debian.net>
 Architecture: amd64
-Installed-Size: %%size%%
+Installed-Size: %%SIZE%%
 Homepage: https://nginx.net
 Description:  small, powerful, scalable web/proxy server - common files
  Nginx ("engine X") is a high-performance web and reverse proxy server

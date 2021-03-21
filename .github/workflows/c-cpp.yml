@@ -16,9 +16,7 @@ on:
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - name: Checkout workflow
       uses: actions/checkout@v2
@@ -34,20 +32,26 @@ jobs:
         git clone https://github.com/nginx/nginx.git
     - name: Compile
       run: |
+        pwd
         cur_path=`pwd`
         cd nginx
         mv auto/configure configure
         patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_1018.patch
-        ./configure  --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=/var/log/nginx/error.log --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --modules-path=/usr/lib/nginx/modules --http-client-body-temp-path=/var/lib/nginx/body --http-proxy-temp-path=/var/lib/nginx/proxy --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --without-http_memcached_module --without-http_uwsgi_module --without-http_scgi_module --with-http_gzip_static_module --with-http_ssl_module --with-http_stub_status_module --with-http_v2_module --with-openssl="$cur_path/openssl" --with-openssl-opt=enable-tls1_3 --with-stream --with-stream_ssl_module --add-module="$cur_path/ngx_http_proxy_connect_module"
+        ./configure  --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=/var/log/nginx/error.log --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --modules-path=/usr/lib/nginx/modules --http-client-body-temp-path=/var/lib/nginx/body --http-proxy-temp-path=/var/lib/nginx/proxy --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --without-http_memcached_module --without-http_uwsgi_module --without-http_scgi_module --with-http_gzip_static_module --with-http_ssl_module --with-http_stub_status_module --with-http_v2_module --with-openssl="${cur_path}/openssl" --with-openssl-opt=enable-tls1_3 --with-stream --with-stream_ssl_module --add-module="${cur_path}/ngx_http_proxy_connect_module"
         make
-        cp ${cur_path}/nginx-workflow/install.sh ${cur_path}/nginx/install.sh
-        
+        test -d ../nginx_debian/usr/sbin/ || mkdir -p ../nginx_debian/usr/sbin/
+        cp objs/nginx ../nginx_debian/usr/sbin/nginx
+    - name: deb package
+      run: |
+        pwd
+        NG_PKG_SIZE=`du -sk nginx_debian|awk '{print $1}'`
+        NG_PKG_VERSION=`cat nginx/src/core/nginx.h |grep "#define NGINX_VERSION" | awk '{print $3}' | sed 's/"//g'`
+        sed -e "s|%%SIZE%%|${NG_PKG_SIZE}|" -e "s|%%VERSION%%|${NG_PKG_VERSION}|" < control_tmpl > nginx_debian/DEBIAN/control
+        dpkg -b nginx_debian nginx_proxy.deb
+
     - name : Upload artifact
       uses: actions/upload-artifact@master
       with:
         name: nginx
         path: |
-          nginx/install.sh
-          nginx/docs
-          nginx/conf
-          nginx/objs/nginx
+          nginx_proxy.deb
