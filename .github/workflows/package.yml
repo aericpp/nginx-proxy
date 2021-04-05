@@ -1,29 +1,34 @@
 name: build nginx
 
 on:
-  push:
-    tags:
-    - '*'
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 0 5,15,25 * *'
+  # push:
+  #   tags:
+  #   - '*'
 
 jobs:
   build:
     runs-on: ubuntu-18.04
     steps:
-    - name: Checkout workflow
+    - name: Checkout project
       uses: actions/checkout@v2
       
     - name: Clone Openssl
       run: |
         git clone https://github.com/openssl/openssl.git -b OpenSSL_1_1_1-stable openssl
+
     - name: Clone ngx_http_proxy_connect_module
       run: |
         git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
+
     - name: Clone nginx
       run: |
         git clone https://github.com/nginx/nginx.git
-    - name: Compile
+
+    - name: Compile nginx
       run: |
-        pwd
         cur_path=`pwd`
         cd nginx
         mv auto/configure configure
@@ -32,7 +37,8 @@ jobs:
         make
         test -d ../nginx_debian/usr/sbin/ || mkdir -p ../nginx_debian/usr/sbin/
         cp objs/nginx ../nginx_debian/usr/sbin/nginx
-    - name: deb package
+
+    - name: Make DEB package
       run: |
         pwd
         NG_PKG_SIZE=`du -sk nginx_debian|awk '{print $1}'`
@@ -45,9 +51,17 @@ jobs:
         test -d "nginx_debian/etc/nginx/modules-enabled" || mkdir -p "nginx_debian/etc/nginx/modules-enabled"
         test -d "nginx_debian/etc/nginx/conf.d" || mkdir -p "nginx_debian/etc/nginx/conf.d"
         test -d "nginx_debian/etc/nginx/sites-enabled" || mkdir -p "nginx_debian/etc/nginx/sites-enabled"
-        dpkg -b nginx_debian nginx_proxy.deb
-    - name: release
-      uses: ncipollo/release-action@v1
+        dpkg -b "nginx_debian nginx_proxy.deb"
+
+    - name: Release
+      # uses: ncipollo/release-action@v1
+      # with:
+      #   artifacts: "nginx_proxy.deb"
+      #   token: ${{ secrets.GITHUB_TOKEN }}
+      uses: djnicholson/release-action@v2.11
       with:
-        artifacts: "nginx_proxy.deb"
         token: ${{ secrets.GITHUB_TOKEN }}
+        release-name: ${{ format('v0.{0}', github.run_id) }}
+        tag-name: ${{ format('v0.{0}', github.run_id) }}
+        asset-name: ${{ format('nginx_proxy_{0}.deb', github.run_id) }}
+        file: 'nginx_proxy.deb'
