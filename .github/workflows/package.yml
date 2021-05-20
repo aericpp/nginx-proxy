@@ -1,9 +1,6 @@
 name: build nginx
 
 on:
-  # schedule:
-  #   # * is a special character in YAML so you have to quote this string
-  #   - cron:  '0 0 5,15,25 * *'
   push:
     tags:
     - '*'
@@ -53,6 +50,13 @@ jobs:
         test -d "nginx_debian/etc/nginx/conf.d" || mkdir -p "nginx_debian/etc/nginx/conf.d"
         test -d "nginx_debian/etc/nginx/sites-enabled" || mkdir -p "nginx_debian/etc/nginx/sites-enabled"
         dpkg -b nginx_debian nginx_proxy.deb
+    
+    - name: Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: nginx
+        path: |
+          nginx_proxy.deb
 
     - name: Release
       # uses: ncipollo/release-action@v1
