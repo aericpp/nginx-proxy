@@ -1,4 +1,4 @@
-name: build nginx
+name: build matrix
 
 on:
   push:
@@ -41,7 +41,8 @@ jobs:
         pwd
         NG_PKG_SIZE=`du -sk nginx_debian|awk '{print $1}'`
         NG_PKG_VERSION=`cat nginx/src/core/nginx.h |grep "#define NGINX_VERSION" | awk '{print $3}' | sed 's/"//g'`
-        sed -e "s|%%SIZE%%|${NG_PKG_SIZE}|" -e "s|%%VERSION%%|${NG_PKG_VERSION}|" < control_tmpl > nginx_debian/DEBIAN/control
+        test -d "nginx_debian/DEBIAN" || mkdir -p "nginx_debian/DEBIAN" 
+        sed -e "s|%%SIZE%%|${NG_PKG_SIZE}|" -e "s|%%VERSION%%|${NG_PKG_VERSION}|" < nginx_proxy/control_tmpl > nginx_debian/DEBIAN/control
         test -d "nginx_debian/var/lib/nginx" || mkdir -p "nginx_debian/var/lib/nginx"        
         test -d "nginx_debian/var/log/nginx" || mkdir -p "nginx_debian/var/log/nginx"
         test -d "nginx_debian/var/www/html" || mkdir -p "nginx_debian/var/www/html"
