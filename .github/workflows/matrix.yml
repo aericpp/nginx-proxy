@@ -52,7 +52,10 @@ jobs:
         test -d "nginx_debian/etc/nginx/sites-enabled" || mkdir -p "nginx_debian/etc/nginx/sites-enabled"
         dpkg -b nginx_debian nginx_proxy.deb
     - name: release
-      uses: ncipollo/release-action@v1
+      uses: djnicholson/release-action@v2.11
       with:
-        artifacts: "nginx_proxy.deb"
         token: ${{ secrets.GITHUB_TOKEN }}
+        release-name: ${{ format('v0.{0}', github.run_id) }}
+        tag-name: ${{ format('v0.{0}', github.run_id) }}
+        asset-name: ${{ format('nginx_proxy_{0}.deb', github.run_id) }}
+        file: 'nginx_proxy.deb'
