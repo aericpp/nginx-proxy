@@ -2,8 +2,8 @@ name: build nginx
 
 on:
   push:
-    tags:
-    - '*'
+    branches:
+    - main
 
 jobs:
   build:
