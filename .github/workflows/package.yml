@@ -1,9 +1,12 @@
 name: build nginx
 
 on:
-  push:
-    branches:
-    - main
+  # push:
+  #   branches:
+  #   - main
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '12 2 * * 2'
 
 jobs:
   build:
@@ -59,10 +62,6 @@ jobs:
           nginx_proxy.deb
 
     - name: Release
-      # uses: ncipollo/release-action@v1
-      # with:
-      #   artifacts: "nginx_proxy.deb"
-      #   token: ${{ secrets.GITHUB_TOKEN }}
       uses: djnicholson/release-action@v2.11
       with:
         token: ${{ secrets.GITHUB_TOKEN }}

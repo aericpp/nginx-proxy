@@ -19,24 +19,27 @@ jobs:
     - name: Clone Openssl
       run: |
         git clone https://github.com/openssl/openssl.git -b OpenSSL_1_1_1-stable openssl
+
     - name: Clone ngx_http_proxy_connect_module
       run: |
         git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
+
     - name: Clone nginx
       run: |
         git clone https://github.com/nginx/nginx.git
-    - name: Compile
+
+    - name: Compile Nginx
       run: |
-        pwd
         cur_path=`pwd`
         cd nginx
         mv auto/configure configure
-        patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_1018.patch
+        patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
         ./configure  --prefix=/usr/share/nginx --sbin-path=/usr/sbin/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=/var/log/nginx/error.log --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --modules-path=/usr/lib/nginx/modules --http-client-body-temp-path=/var/lib/nginx/body --http-proxy-temp-path=/var/lib/nginx/proxy --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --without-mail_pop3_module --without-mail_imap_module --without-mail_smtp_module --without-http_memcached_module --without-http_uwsgi_module --without-http_scgi_module --with-http_gzip_static_module --with-http_ssl_module --with-http_stub_status_module --with-http_v2_module --with-openssl="${cur_path}/openssl" --with-openssl-opt=enable-tls1_3 --with-stream --with-stream_ssl_module --with-stream_ssl_preread_module --with-stream_realip_module --add-module="${cur_path}/ngx_http_proxy_connect_module"
         make
         test -d ../nginx_debian/usr/sbin/ || mkdir -p ../nginx_debian/usr/sbin/
         cp objs/nginx ../nginx_debian/usr/sbin/nginx
-    - name: deb package
+
+    - name: Make DEB package
       run: |
         pwd
         NG_PKG_SIZE=`du -sk nginx_debian|awk '{print $1}'`
@@ -51,7 +54,15 @@ jobs:
         test -d "nginx_debian/etc/nginx/conf.d" || mkdir -p "nginx_debian/etc/nginx/conf.d"
         test -d "nginx_debian/etc/nginx/sites-enabled" || mkdir -p "nginx_debian/etc/nginx/sites-enabled"
         dpkg -b nginx_debian nginx_proxy.deb
-    - name: release
+        
+    - name: Upload artifact
+      uses: actions/upload-artifact@master
+      with:
+        name: nginx
+        path: |
+          nginx_proxy.deb
+
+    - name: Release
       uses: djnicholson/release-action@v2.11
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
