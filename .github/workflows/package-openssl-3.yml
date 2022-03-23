@@ -3,7 +3,7 @@ name: build with openssl 3.0
 on:
   push:
     branches:
-    - 'main'
+     - 'main'
   schedule:
     # * is a special character in YAML so you have to quote this string
     - cron:  '12 2 * * 2'
@@ -54,10 +54,6 @@ jobs:
     - name: Clone ngx_http_proxy_connect_module
       run: |
         git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
-        echo "[DEBUG] steps.check_nginx.outputs.UPDATE" ${{ steps.check_nginx.outputs.UPDATE }}
-        echo "[DEBUG] steps.check_nginx.outputs.VER" ${{ steps.check_nginx.outputs.VER }}
-        echo "[DEBUG] steps.check_openssl.outputs.UPDATE" ${{ steps.check_openssl.outputs.UPDATE }}
-        echo "[DEBUG] steps.check_openssl.outputs.VER" ${{ steps.check_openssl.outputs.VER }}
 
     - name: Compile nginx
       run: |
