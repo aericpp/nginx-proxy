@@ -20,7 +20,7 @@ jobs:
       run: |
         git clone https://github.com/openssl/openssl.git
         cd openssl
-        git tag --sort=-committerdate -l 'openssl-3.*' | head -n 1
+        git tag --sort=-committerdate -l 'openssl-3.*'
         VER=$(git tag --sort=-committerdate -l 'openssl-3.*' | head -n 1)
         git checkout $VER
         echo "::set-output name=VER::$VER"
