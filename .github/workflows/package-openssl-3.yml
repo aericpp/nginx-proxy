@@ -1,4 +1,4 @@
-name: build nginx
+name: build nginx with openssl 3.0
 
 on:
   push:
