@@ -60,7 +60,6 @@ jobs:
         echo "[DEBUG] steps.check_openssl.outputs.VER" ${{ steps.check_openssl.outputs.VER }}
 
     - name: Compile nginx
-      if: ${{ ${{ steps.check_nginx.outputs.UPDATE }} || ${{ steps.check_nginx.outputs.UPDATE }} }}
       run: |
         cur_path=`pwd`
         cd nginx
@@ -72,7 +71,6 @@ jobs:
         cp objs/nginx ../nginx_debian/usr/sbin/nginx
 
     - name: Make DEB package
-      if: ${{ steps.check_nginx.outputs.UPDATE || steps.check_openssl.outputs.UPDATE }}
       run: |
         pwd
         NG_PKG_SIZE=`du -sk nginx_debian|awk '{print $1}'`
@@ -89,7 +87,6 @@ jobs:
         dpkg -b nginx_debian nginx_proxy.deb
     
     - name: Upload artifact
-      if: ${{ steps.check_nginx.outputs.UPDATE || steps.check_openssl.outputs.UPDATE }}
       uses: actions/upload-artifact@master
       with:
         name: nginx
@@ -97,7 +94,6 @@ jobs:
           nginx_proxy.deb
 
     - name: Release
-      if: ${{ steps.check_nginx.outputs.UPDATE || steps.check_openssl.outputs.UPDATE }}
       uses: djnicholson/release-action@v2.11
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
