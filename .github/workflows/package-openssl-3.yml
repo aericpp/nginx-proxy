@@ -23,14 +23,14 @@ jobs:
         git tag --sort=-committerdate -l 'openssl-3.*'
         VER=$(git tag --sort=-committerdate -l 'openssl-3.*' | head -n 1)
         git checkout $VER
-        echo "::set-output name=VER::$VER"
+        echo "::set-output name=VER::$(echo $VER)"
         echo "[DEBUG] steps.check_openssl.outputs.VER" $VER
         current=$(date +%s)
         last=$(git log --pretty=format:"%at" $(git rev-parse HEAD) -1)
         min=`expr $current - $last`
-        echo "::set-output name=UPDATE::1"
+        echo "::set-output name=UPDATE::$(echo 1)"
         if [ $min -gt 86400 ];then
-          echo "::set-output name=UPDATE::0"
+          echo "::set-output name=UPDATE::$(echo 0)"
           echo "[DEBUG] steps.check_openssl.outputs.UPDATE 0"
         fi
 
@@ -42,14 +42,14 @@ jobs:
         git tag --sort=-committerdate -l 'release-*' | head -n 1
         VER=$(git tag --sort=-committerdate -l 'release-*' | head -n 1)
         git checkout $VER
-        echo "::set-output name=VER::$VER"
+        echo "::set-output name=VER::$(echo $VER)"
         echo "[DEBUG] steps.check_nginx.outputs.VER" $VER
         current=$(date +%s)
         last=$(git log --pretty=format:"%at" $(git rev-parse HEAD) -1)
         min=`expr $current - $last`
-        echo "::set-output name=UPDATE::1"
+        echo "::set-output name=UPDATE::$(echo 1)"
         if [ $min -gt 86400 ];then
-          echo "::set-output name=UPDATE::0"
+          echo "::set-output name=UPDATE::$(echo 0)"
           echo "[DEBUG] steps.check_nginx.outputs.UPDATE 0"
         fi
 
