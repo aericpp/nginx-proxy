@@ -39,7 +39,7 @@ jobs:
       run: |
         git clone https://github.com/nginx/nginx.git
         cd nginx
-        git tag --sort=-committerdate -l 'release-*' | head -n 1
+        git tag --sort=-committerdate -l 'release-1.*'
         VER=$(git tag --sort=-committerdate -l 'release-*' | head -n 1)
         git checkout $VER
         echo "::set-output name=VER::$(echo $VER)"
@@ -62,6 +62,6 @@ jobs:
         echo "[DEBUG] steps.check_openssl.outputs.VER" ${{ steps.check_openssl.outputs.VER }}
 
     - name: Compile nginx
-      if: ${{ steps.check_openssl.outputs.UPDATE || steps.check_nginx.outputs.UPDATE }}
+      if: ${{ steps.check_openssl.outputs.UPDATE == 1 || steps.check_nginx.outputs.UPDATE == 1 }}
       run: |
         echo "test"
