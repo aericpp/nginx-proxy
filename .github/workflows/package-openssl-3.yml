@@ -136,7 +136,7 @@ jobs:
       run: |
         pwd
         NG_PKG_SIZE=`du -sk nginx_debian|awk '{print $1}'`
-        NG_PKG_VERSION=${{ steps.check_nginx.outputs.VER }}
+        NG_PKG_VERSION=${{ steps.check_nginx.outputs.V }}
         test -d "nginx_debian/DEBIAN" || mkdir -p "nginx_debian/DEBIAN" 
         sed -e "s|%%SIZE%%|${NG_PKG_SIZE}|" -e "s|%%VERSION%%|${NG_PKG_VERSION}|" < control_tmpl > nginx_debian/DEBIAN/control
         test -d "nginx_debian/var/lib/nginx" || mkdir -p "nginx_debian/var/lib/nginx"        
