@@ -20,8 +20,8 @@ jobs:
       run: |
         git clone https://github.com/nginx/nginx.git
         cd nginx
-        git tag --sort='-committerdate' -l 'release-1.*'
-        VER=$(git tag --sort=-committerdate -l 'release-*' | head -n 1)
+        test -f .hgtags && cat .hgtags |tail -n 1 |awk '{print $2}'
+        VER=$(test -f .hgtags && cat .hgtags |tail -n 1 |awk '{print $2}')
         git checkout $VER
         echo "::set-output name=VER::$(echo $VER)"
         echo "[DEBUG] steps.check_nginx.outputs.VER" $VER
@@ -39,8 +39,16 @@ jobs:
       run: |
         git clone https://github.com/openssl/openssl.git
         cd openssl
-        git tag -l 'openssl-3.*' --sort='-committerdate' 
-        VER=$(git tag --sort='-committerdate' -l 'openssl-3.*' | head -n 1)
+        git log --simplify-by-decoration --pretty="format:%ct %D" --tags \
+          | grep openssl-3. \
+          | sort -n -k 1 -t " " -r \
+          | head -n 1 \
+          | awk '{print $3}'
+        VER=$(git log --simplify-by-decoration --pretty="format:%ct %D" --tags \
+          | grep openssl-3. \
+          | sort -n -k 1 -t " " -r \
+          | head -n 1 \
+          | awk '{print $3}')
         git checkout $VER
         echo "::set-output name=VER::$(echo $VER)"
         echo "[DEBUG] steps.check_openssl.outputs.VER" $VER
@@ -60,7 +68,7 @@ jobs:
         echo "[DEBUG] steps.check_nginx.outputs.VER" ${{ steps.check_nginx.outputs.VER }}
         echo "[DEBUG] steps.check_openssl.outputs.UPDATE" ${{ steps.check_openssl.outputs.UPDATE }}
         echo "[DEBUG] steps.check_openssl.outputs.VER" ${{ steps.check_openssl.outputs.VER }}
-        echo "[DEBUG] env.GITHUB_EVENT_NAME" ${{ env.GITHUB_EVENT_NAME }}
+        echo "[DEBUG] env.GITHUB_EVENT_NAME" ${{ github.GITHUB_EVENT_NAME }}
 
     - name: For test outputs
       if: ${{ steps.check_openssl.outputs.UPDATE == 1 || steps.check_nginx.outputs.UPDATE == 1 }}
@@ -68,6 +76,6 @@ jobs:
         echo "test"
 
     - name: For test Event
-      if: ${{ steps.check_openssl.outputs.UPDATE == 1 || steps.check_nginx.outputs.UPDATE == 1 || env.GITHUB_EVENT_NAME == 'push' }}
+      if: ${{ steps.check_openssl.outputs.UPDATE == 1 || steps.check_nginx.outputs.UPDATE == 1 || github.GITHUB_EVENT_NAME == 'push' }}
       run: |
         echo "test"
