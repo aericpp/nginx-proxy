@@ -70,7 +70,7 @@ jobs:
         echo "[DEBUG] TAG_EXIST" $TAG_EXIST
         echo "::set-output name=FLAG::1"
         echo "::set-output name=TAG_NAME::$(echo $TAG_NAME)"
-        if [ "$TAG_NAME" -eq "$TAG_EXIST" ];then
+        if [ "$TAG_NAME" == "$TAG_EXIST" ];then
           echo "::set-output name=FLAG::0"
         fi
 
