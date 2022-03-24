@@ -76,6 +76,8 @@ jobs:
         echo "test"
 
     - name: For test Event
-      if: ${{ steps.check_openssl.outputs.UPDATE == 1 || steps.check_nginx.outputs.UPDATE == 1 || github.event_name == 'push' == 'push' }}
+      if: ${{ steps.check_openssl.outputs.UPDATE == 1 \
+        || steps.check_nginx.outputs.UPDATE == 1 \
+        || github.event_name == 'push' }}
       run: |
-        echo "test"
+        echo "Event test"
