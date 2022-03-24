@@ -166,7 +166,7 @@ jobs:
       uses: djnicholson/release-action@v2.11
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        release-name: ${{ format('nginx_{0}', steps.check_release.outputs.TAGNAME) }}
-        tag-name: ${{ format('{0}', steps.check_release.outputs.TAGNAME) }}
-        asset-name: ${{ format('nginx_{0}_amd64.deb', steps.check_release.outputs.TAGNAME) }}
+        release-name: ${{ format('nginx_{0}', steps.check_release.outputs.TAG_NAME) }}
+        tag-name: ${{ format('{0}', steps.check_release.outputs.TAG_NAME) }}
+        asset-name: ${{ format('nginx_{0}_amd64.deb', steps.check_release.outputs.TAG_NAME) }}
         file: 'nginx_proxy.deb'
