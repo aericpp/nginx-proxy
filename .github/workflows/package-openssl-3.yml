@@ -64,12 +64,12 @@ jobs:
     - name: Check Release
       id: check_release
       run: |
-        TAG_NAME=$(echo "v${{steps.check_openssl.outputs.V}}-${{steps.check_openssl.outputs.VER}}")
+        TAG_NAME=$(echo "v"${{steps.check_nginx.outputs.V}}"-"${{steps.check_openssl.outputs.VER}}")
         TAG_EXIST=$(git tag -l ${TAG_NAME})
         echo "[DEBUG] TAG_NAME" $TAG_NAME
         echo "[DEBUG] TAG_EXIST" $TAG_EXIST
         echo "::set-output name=FLAG::1"
-        echo "::set-output name=TAG_NAME::$TAG_NAME"
+        echo "::set-output name=TAG_NAME::$(echo $TAG_NAME)"
         if [ $TAG_NAME -eq $TAG_EXIST ];then
           echo "::set-output name=FLAG::0"
         fi
@@ -82,6 +82,7 @@ jobs:
         echo "[DEBUG] steps.check_openssl.outputs.UPDATE" ${{ steps.check_openssl.outputs.UPDATE }}
         echo "[DEBUG] steps.check_openssl.outputs.VER" ${{ steps.check_openssl.outputs.VER }}
         echo "[DEBUG] steps.check_release.outputs.FLAG" ${{ steps.check_release.outputs.FLAG }}
+        echo "[DEBUG] steps.check_release.outputs.TAG_NAME" ${{ steps.check_release.outputs.TAG_NAME }}
         echo "[DEBUG] github.event_name" ${{ github.event_name }}
 
     - name: Compile nginx
