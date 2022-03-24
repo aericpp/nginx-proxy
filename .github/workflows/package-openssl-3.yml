@@ -68,7 +68,7 @@ jobs:
         echo "[DEBUG] steps.check_nginx.outputs.VER" ${{ steps.check_nginx.outputs.VER }}
         echo "[DEBUG] steps.check_openssl.outputs.UPDATE" ${{ steps.check_openssl.outputs.UPDATE }}
         echo "[DEBUG] steps.check_openssl.outputs.VER" ${{ steps.check_openssl.outputs.VER }}
-        echo "[DEBUG] env.GITHUB_EVENT_NAME" ${{ github.GITHUB_EVENT_NAME }}
+        echo "[DEBUG] github.event_name" ${{ github.event_name }}
 
     - name: For test outputs
       if: ${{ steps.check_openssl.outputs.UPDATE == 1 || steps.check_nginx.outputs.UPDATE == 1 }}
@@ -76,6 +76,6 @@ jobs:
         echo "test"
 
     - name: For test Event
-      if: ${{ steps.check_openssl.outputs.UPDATE == 1 || steps.check_nginx.outputs.UPDATE == 1 || github.GITHUB_EVENT_NAME == 'push' }}
+      if: ${{ steps.check_openssl.outputs.UPDATE == 1 || steps.check_nginx.outputs.UPDATE == 1 || github.event_name == 'push' == 'push' }}
       run: |
         echo "test"
