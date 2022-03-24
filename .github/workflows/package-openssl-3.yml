@@ -64,8 +64,9 @@ jobs:
     - name: Check Release
       id: check_release
       run: |
+        git clone https://github.com/aericpp/nginx-proxy.git
+        cd nginx-proxy
         TAG_NAME=$(echo "v"${{steps.check_nginx.outputs.V}}"-"${{steps.check_openssl.outputs.VER}})
-        git tag -l
         TAG_EXIST=$(git tag -l ${TAG_NAME})
         echo "[DEBUG] TAG_NAME" $TAG_NAME
         echo "[DEBUG] TAG_EXIST" $TAG_EXIST
