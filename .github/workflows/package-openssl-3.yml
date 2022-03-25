@@ -6,7 +6,7 @@ on:
      - 'main'
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 7 * * *'
+    - cron:  '0 6 * * *'
 
 jobs:
   build:
@@ -26,14 +26,6 @@ jobs:
         echo "::set-output name=VER::$(echo $VER)"
         echo "::set-output name=V::$(echo $VER| cut -c9-)"
         echo "[DEBUG] steps.check_nginx.outputs.VER" $VER
-        current=$(date +%s)
-        last=$(git log --pretty=format:"%at" $(git rev-parse HEAD) -1)
-        min=`expr $current - $last`
-        echo "::set-output name=UPDATE::$(echo 1)"
-        if [ $min -gt 86400 ];then
-          echo "::set-output name=UPDATE::$(echo 0)"
-          echo "[DEBUG] steps.check_nginx.outputs.UPDATE 0"
-        fi
 
     - name: Clone Openssl
       id: check_openssl
@@ -53,14 +45,7 @@ jobs:
         git checkout $VER
         echo "::set-output name=VER::$(echo $VER)"
         echo "[DEBUG] steps.check_openssl.outputs.VER" $VER
-        current=$(date +%s)
-        last=$(git log --pretty=format:"%at" $(git rev-parse HEAD) -1)
-        min=`expr $current - $last`
-        echo "::set-output name=UPDATE::$(echo 1)"
-        if [ $min -gt 86400 ];then
-          echo "::set-output name=UPDATE::$(echo 0)"
-          echo "[DEBUG] steps.check_openssl.outputs.UPDATE 0"
-        fi
+
     - name: Check Release
       id: check_release
       run: |
@@ -79,9 +64,7 @@ jobs:
     - name: Clone ngx_http_proxy_connect_module
       run: |
         git clone https://github.com/chobits/ngx_http_proxy_connect_module.git        
-        echo "[DEBUG] steps.check_nginx.outputs.UPDATE" ${{ steps.check_nginx.outputs.UPDATE }}
         echo "[DEBUG] steps.check_nginx.outputs.VER" ${{ steps.check_nginx.outputs.VER }}
-        echo "[DEBUG] steps.check_openssl.outputs.UPDATE" ${{ steps.check_openssl.outputs.UPDATE }}
         echo "[DEBUG] steps.check_openssl.outputs.VER" ${{ steps.check_openssl.outputs.VER }}
         echo "[DEBUG] steps.check_release.outputs.FLAG" ${{ steps.check_release.outputs.FLAG }}
         echo "[DEBUG] steps.check_release.outputs.TAG_NAME" ${{ steps.check_release.outputs.TAG_NAME }}
