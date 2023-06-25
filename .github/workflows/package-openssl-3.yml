@@ -6,7 +6,7 @@ on:
      - 'main'
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '30 * * * *'
+    - cron:  '10 * * * *'
 
 jobs:
   build:
@@ -23,8 +23,8 @@ jobs:
         test -f .hgtags && cat .hgtags |tail -n 1 |awk '{print $2}'
         VER=$(test -f .hgtags && cat .hgtags |tail -n 1 |awk '{print $2}')
         git checkout $VER
-        echo "::set-output name=VER::$(echo $VER)"
-        echo "::set-output name=V::$(echo $VER| cut -c9-)"
+        echo "name=VER::$(echo $VER)" >> $GITHUB_OUTPUT
+        echo "name=V::$(echo $VER| cut -c9-)" >> $GITHUB_OUTPUT
         echo "[DEBUG] steps.check_nginx.outputs.VER" $VER
 
     - name: Clone Openssl
@@ -43,7 +43,7 @@ jobs:
           | head -n 1 \
           | awk '{print $3}')
         git checkout $VER
-        echo "::set-output name=VER::$(echo $VER)"
+        echo "name=VER::$(echo $VER)" >> $GITHUB_OUTPUT
         echo "[DEBUG] steps.check_openssl.outputs.VER" $VER
 
     - name: Check Release
@@ -55,10 +55,10 @@ jobs:
         TAG_EXIST=$(git tag -l ${TAG_NAME})
         echo "[DEBUG] TAG_NAME" $TAG_NAME
         echo "[DEBUG] TAG_EXIST" $TAG_EXIST
-        echo "::set-output name=FLAG::1"
-        echo "::set-output name=TAG_NAME::$(echo $TAG_NAME)"
+        echo "name=FLAG::1" >> $GITHUB_OUTPUT
+        echo "name=TAG_NAME::$(echo $TAG_NAME)" >> $GITHUB_OUTPUT
         if [ "$TAG_NAME" == "$TAG_EXIST" ];then
-          echo "::set-output name=FLAG::0"
+          echo "name=FLAG::0" >> $GITHUB_OUTPUT
         fi
 
     - name: Clone ngx_http_proxy_connect_module
