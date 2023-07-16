@@ -23,9 +23,10 @@ jobs:
         test -f .hgtags && cat .hgtags |tail -n 1 |awk '{print $2}'
         VER=$(test -f .hgtags && cat .hgtags |tail -n 1 |awk '{print $2}')
         git checkout $VER
-        echo "name=VER::$(echo $VER)" >> $GITHUB_OUTPUT
-        echo "name=V::$(echo $VER| cut -c9-)" >> $GITHUB_OUTPUT
-        echo "[DEBUG] steps.check_nginx.outputs.VER" $VER
+        echo "VER=$(echo $VER)" >> $GITHUB_OUTPUT
+        echo "V=$(echo $VER| cut -c9-)" >> $GITHUB_OUTPUT
+        echo "[DEBUG] VER" $VER
+        echo "[DEBUG] steps.check_nginx.outputs.VER" ${{ steps.check_nginx.outputs.VER }}
 
     - name: Clone Openssl
       id: check_openssl
