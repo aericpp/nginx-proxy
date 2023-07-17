@@ -35,12 +35,12 @@ jobs:
         git clone https://github.com/openssl/openssl.git
         cd openssl
         git log --simplify-by-decoration --pretty="format:%ct %D" --tags \
-          | grep openssl-3. \
+          | grep openssl-3.1 \
           | sort -n -k 1 -t " " -r \
           | head -n 1 \
           | awk '{print $3}'
         VER=$(git log --simplify-by-decoration --pretty="format:%ct %D" --tags \
-          | grep openssl-3. \
+          | grep openssl-3.1 \
           | sort -n -k 1 -t " " -r \
           | head -n 1 \
           | awk '{print $3}')
