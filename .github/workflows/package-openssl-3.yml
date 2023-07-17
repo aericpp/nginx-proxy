@@ -136,6 +136,7 @@ jobs:
         test -d "nginx_debian/etc/nginx/conf.d" || mkdir -p "nginx_debian/etc/nginx/conf.d"
         test -d "nginx_debian/etc/nginx/sites-enabled" || mkdir -p "nginx_debian/etc/nginx/sites-enabled"
         dpkg -b nginx_debian nginx_proxy.deb
+        tar cvzf nginx_proxy_deb_src.tar.gz nginx_debian
 
     - name: Upload artifact
       if: |
@@ -148,13 +149,23 @@ jobs:
         name: nginx
         path: |
           nginx_proxy.deb
+          nginx_proxy_deb_src.tar.gz
+
+    # - name: Release
+    #   if: ${{ steps.check_release.outputs.FLAG == 1 }}
+    #   uses: djnicholson/release-action@v2.11
+    #   with:
+    #     token: ${{ secrets.GITHUB_TOKEN }}
+    #     release-name: ${{ format('nginx_{0}', steps.check_release.outputs.TAG_NAME) }}
+    #     tag-name: ${{ format('{0}', steps.check_release.outputs.TAG_NAME) }}
+    #     asset-name: ${{ format('nginx_{0}_amd64.deb', steps.check_release.outputs.TAG_NAME) }}
+    #     file: 'nginx_proxy.deb'
 
     - name: Release
       if: ${{ steps.check_release.outputs.FLAG == 1 }}
-      uses: djnicholson/release-action@v2.11
+      uses: ncipollo/release-action@v1
       with:
         token: ${{ secrets.GITHUB_TOKEN }}
-        release-name: ${{ format('nginx_{0}', steps.check_release.outputs.TAG_NAME) }}
-        tag-name: ${{ format('{0}', steps.check_release.outputs.TAG_NAME) }}
-        asset-name: ${{ format('nginx_{0}_amd64.deb', steps.check_release.outputs.TAG_NAME) }}
-        file: 'nginx_proxy.deb'
+        name: ${{ format('nginx_{0}', steps.check_release.outputs.TAG_NAME) }}
+        tag: ${{ format('{0}', steps.check_release.outputs.TAG_NAME) }}
+        artifacts: 'nginx_proxy.deb, nginx_proxy_deb_src.tar.gz'
