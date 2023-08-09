@@ -36,7 +36,7 @@ fi
 cd "$CURRENT_PATH/nginx"
 git checkout $NGINX_VERSION
 
-# patch for httpd connect method
+# patch for http connect method
 mv auto/configure configure
 patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
 
