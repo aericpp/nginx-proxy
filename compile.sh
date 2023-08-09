@@ -2,12 +2,12 @@
 set -eu
 
 CURRENT_PATH=$(pwd)
-ls -al
+
 # check out repos
 git clone https://github.com/nginx/nginx.git
 git clone https://github.com/openssl/openssl.git
 git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
-# git clone https://github.com/aericpp/nginx-proxy.git
+git clone https://github.com/aericpp/nginx-proxy.git
 
 # check nginx version
 cd "$CURRENT_PATH/nginx"
@@ -25,16 +25,12 @@ OPENSSL_VERSION=$(git log --simplify-by-decoration --pretty="format:%ct %D" --ta
 git checkout $OPENSSL_VERSION
 
 # check release
-cd "$CURRENT_PATH"
-echo "$CURRENT_PATH"
+cd "$CURRENT_PATH/nginx-proxy"
 git tag -l
 TAG_NAME=$(echo "v${NGINX_VERSION_NUMBER}-${OPENSSL_VERSION}")
 TAG_EXIST=$(git tag -l ${TAG_NAME})
-echo "$TAG_NAME"
-echo "$TAG_EXIST"
 if [ "$TAG_NAME" == "$TAG_EXIST" ];then
     echo "0" > $CURRENT_PATH/tmp.flag
-    cat $CURRENT_PATH/tmp.flag
     # exit 0
 fi
 
