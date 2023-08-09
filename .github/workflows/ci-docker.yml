@@ -16,7 +16,7 @@ jobs:
       uses: aericpp/building-docker@main
       with:
         script_file: compile.sh
-        depend_list: build-essential libpcre3-dev zlib1g-dev
+        depend_list: build-essential libpcre3-dev zlib1g-dev git
 
     - name: Upload artifact
       uses: actions/upload-artifact@master
