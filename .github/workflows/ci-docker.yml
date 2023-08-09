@@ -14,16 +14,11 @@ jobs:
 
     - name: compile nginx-proxy
       uses: aericpp/building-docker@main
-      env:
+      with:
         script_file: compile.sh
         depend_list: build-essential libpcre3-dev zlib1g-dev
 
     - name: Upload artifact
-      if: |
-        ${{
-          steps.check_release.outputs.FLAG == 1 ||
-            github.event_name == 'push'
-        }}
       uses: actions/upload-artifact@master
       with:
         name: nginx
