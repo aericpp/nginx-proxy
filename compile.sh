@@ -42,8 +42,8 @@ git checkout $NGINX_VERSION
 mv auto/configure configure
 patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
 
+# --with-cc-opt='-static -static-libgcc' \
 ./configure \
-    --with-cc-opt='-static -static-libgcc' \
     --with-ld-opt=-static \
     --prefix=/usr/share/nginx \
     --sbin-path=/usr/sbin/nginx \
