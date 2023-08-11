@@ -34,7 +34,7 @@ echo "$TAG_NAME" > $CURRENT_PATH/release.version
 echo "1" > $CURRENT_PATH/tmp.flag
 if [ "$TAG_NAME" == "$TAG_EXIST" ]; then
     echo "0" > $CURRENT_PATH/tmp.flag
-    # exit 0
+    exit 0
 fi
 
 # compile nginx-proxy
