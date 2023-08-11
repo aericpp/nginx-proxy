@@ -29,7 +29,10 @@ cd "$CURRENT_PATH/nginx-proxy"
 git tag -l
 TAG_NAME=$(echo "v${NGINX_VERSION_NUMBER}-${OPENSSL_VERSION}")
 TAG_EXIST=$(git tag -l ${TAG_NAME})
-if [ "$TAG_NAME" == "$TAG_EXIST" ];then
+
+echo "$TAG_NAME" > $CURRENT_PATH/release.version
+echo "1" > $CURRENT_PATH/tmp.flag
+if [ "$TAG_NAME" == "$TAG_EXIST" ]; then
     echo "0" > $CURRENT_PATH/tmp.flag
     # exit 0
 fi
@@ -42,8 +45,6 @@ git checkout $NGINX_VERSION
 mv auto/configure configure
 patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
 
-# --with-cc-opt='-static -static-libgcc' \
-#    --with-ld-opt=-static \
 ./configure \
     --with-cc-opt='-static -static-libgcc' \
     --with-ld-opt=-static \

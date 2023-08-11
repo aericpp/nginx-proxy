@@ -3,7 +3,7 @@ name: build with openssl 3.0
 on:
   schedule:
     # * is a special character in YAML so you have to quote this string
-    - cron:  '0 6 * * *'
+    # - cron:  '0 6 * * *'
 
 jobs:
   build:
