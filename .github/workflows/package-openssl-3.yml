@@ -15,7 +15,7 @@ jobs:
     - name: compile nginx-proxy
       uses: docker://debian:11-slim
       with:
-        entrypoint: /github/workspace/entrypoint.sh
+        entrypoint: /home/runner/work/nginx-proxy/nginx-proxy/entrypoint.sh
 
     - name: check release
       id: check_release
