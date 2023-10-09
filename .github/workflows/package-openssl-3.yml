@@ -11,6 +11,11 @@ jobs:
     steps:
     - name: checkout project
       uses: actions/checkout@v3
+      
+    - name: chmod
+      id: chmod
+      run: |
+        chmod +x entrypoint.sh
 
     - name: compile nginx-proxy
       uses: docker://debian:11-slim
