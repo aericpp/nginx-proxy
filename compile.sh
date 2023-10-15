@@ -3,8 +3,43 @@ set -eu
 
 CURRENT_PATH=$(pwd)
 
+# check out repos
+git clone https://github.com/nginx/nginx.git
+git clone https://github.com/openssl/openssl.git
+git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
+git clone https://github.com/aericpp/nginx-proxy.git
+
+# check nginx version
+cd "$CURRENT_PATH/nginx"
+NGINX_VERSION=$(test -f .hgtags && cat .hgtags |tail -n 1 |awk '{print $2}')
+NGINX_VERSION_NUMBER=$(echo $NGINX_VERSION| cut -c9-)
+git checkout $NGINX_VERSION
+
+# check openssl version
+cd "$CURRENT_PATH/openssl"
+OPENSSL_VERSION=$(git log --simplify-by-decoration --pretty="format:%ct %D" --tags \
+    | grep openssl-3.1 \
+    | sort -n -k 1 -t " " -r \
+    | head -n 1 \
+    | awk '{print $3}')
+git checkout $OPENSSL_VERSION
+
+# check release
+cd "$CURRENT_PATH/nginx-proxy"
+git tag -l
+TAG_NAME=$(echo "v${NGINX_VERSION_NUMBER}-${OPENSSL_VERSION}")
+TAG_EXIST=$(git tag -l ${TAG_NAME})
+
+echo "$TAG_NAME" > $CURRENT_PATH/release.version
+echo "1" > $CURRENT_PATH/tmp.flag
+if [ "$TAG_NAME" == "$TAG_EXIST" ]; then
+    echo "0" > $CURRENT_PATH/tmp.flag
+    exit 0
+fi
+
 # compile nginx-proxy
 cd "$CURRENT_PATH/nginx"
+git checkout $NGINX_VERSION
 
 # patch for http connect method
 mv auto/configure configure
@@ -59,5 +94,5 @@ test -d "nginx_debian/etc/nginx/modules-available" || mkdir -p "nginx_debian/etc
 test -d "nginx_debian/etc/nginx/modules-enabled" || mkdir -p "nginx_debian/etc/nginx/modules-enabled"
 test -d "nginx_debian/etc/nginx/conf.d" || mkdir -p "nginx_debian/etc/nginx/conf.d"
 test -d "nginx_debian/etc/nginx/sites-enabled" || mkdir -p "nginx_debian/etc/nginx/sites-enabled"
-
-dpkg -b nginx_debian nginx_debian_${1}.deb
+dpkg -b nginx_debian nginx_proxy.deb
+tar cvzf nginx_proxy_deb_src.tar.gz nginx_debian
