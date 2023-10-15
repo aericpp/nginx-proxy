@@ -24,9 +24,10 @@ jobs:
         echo "TAG_NAME=$(cat release.version)" >> $GITHUB_OUTPUT
 
     - name: compile nginx-proxy
-      uses: docker://debian:${{ matrix.debian-version }}-slim
+      uses: docker://debian
       with:
         entrypoint: /github/workspace/entrypoint.sh
+        tag: ${{ matrix.debian-version }}-slim
 
     - name: upload artifact
       uses: actions/upload-artifact@master
