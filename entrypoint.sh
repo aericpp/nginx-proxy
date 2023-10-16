@@ -40,17 +40,19 @@ patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.p
     --with-stream_ssl_module \
     --with-stream_ssl_preread_module \
     --with-stream_realip_module \
-    --add-module="${CURRENT_PATH}/ngx_http_proxy_connect_module" \
-    --with-cc-opt='-static -static-libgcc' \
-    --with-ld-opt=-static
+    --add-module="${CURRENT_PATH}/ngx_http_proxy_connect_module"
+    # --with-cc-opt='-static -static-libgcc' \
+    # --with-ld-opt=-static
 make
 
 # get execute file
 test -d ${CURRENT_PATH}/nginx_debian/usr/sbin/ || mkdir -p ${CURRENT_PATH}/nginx_debian/usr/sbin/
 cp ${CURRENT_PATH}/nginx/objs/nginx ${CURRENT_PATH}/nginx_debian/usr/sbin/nginx
 
-NGINX_VERSION_NUMBER=$(echo ${CURRENT_PATH}/nginx.version.number)
-OPENSSL_VERSION=$(echo ${CURRENT_PATH}/openssl.version)
+NGINX_VERSION_NUMBER=$(cat ${CURRENT_PATH}/nginx.version.number)
+OPENSSL_VERSION=$(cat ${CURRENT_PATH}/openssl.version)
+
+echo "[++] nginx_${NGINX_VERSION_NUMBER}.openssl_${OPENSSL_VERSION}.debian+${1}.amd64.deb"
 
 # make deb package
 cd ${CURRENT_PATH}
