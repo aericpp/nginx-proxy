@@ -1,9 +1,12 @@
-name: matrix-docker
+name: ci-docker
 
 on:
   push:
     branches:
-     - 'main'
+     - 'main'  
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    - cron:  '0 6 * * *'
 
 jobs:
   build:
@@ -48,4 +51,4 @@ jobs:
         token: ${{ secrets.GITHUB_TOKEN }}
         name: ${{ format('nginx_{0}', steps.check_release.outputs.TAG_NAME) }}
         tag: ${{ format('{0}', steps.check_release.outputs.TAG_NAME) }}
-        artifacts: '/github/workspace/release/'
+        artifacts: 'release/*'

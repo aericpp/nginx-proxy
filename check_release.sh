@@ -18,7 +18,7 @@ git checkout $NGINX_VERSION
 # check nginx version
 cd "$CURRENT_PATH/openssl"
 OPENSSL_VERSION=$(git log --simplify-by-decoration --pretty="format:%ct %D" --tags \
-    | grep openssl-3.1 \
+    | grep openssl-3. \
     | sort -n -k 1 -t " " -r \
     | head -n 1 \
     | awk '{print $3}')
