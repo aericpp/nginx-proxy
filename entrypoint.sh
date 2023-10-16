@@ -13,7 +13,7 @@ cd "$CURRENT_PATH/nginx"
 mv auto/configure configure
 patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
 
-make clean
+test -d ${CURRENT_PATH}/nginx/objs && make clean
 ./configure \
     --prefix=/usr/share/nginx \
     --sbin-path=/usr/sbin/nginx \
