@@ -49,6 +49,9 @@ make
 test -d ${CURRENT_PATH}/nginx_debian/usr/sbin/ || mkdir -p ${CURRENT_PATH}/nginx_debian/usr/sbin/
 cp ${CURRENT_PATH}/nginx/objs/nginx ${CURRENT_PATH}/nginx_debian/usr/sbin/nginx
 
+NGINX_VERSION_NUMBER=$(echo ${CURRENT_PATH}/nginx.version.number)
+OPENSSL_VERSION=$(echo ${CURRENT_PATH}/openssl.version)
+
 # make deb package
 cd ${CURRENT_PATH}
 NG_PKG_SIZE=`du -sk nginx_debian|awk '{print $1}'`
@@ -63,4 +66,5 @@ test -d "nginx_debian/etc/nginx/modules-enabled" || mkdir -p "nginx_debian/etc/n
 test -d "nginx_debian/etc/nginx/conf.d" || mkdir -p "nginx_debian/etc/nginx/conf.d"
 test -d "nginx_debian/etc/nginx/sites-enabled" || mkdir -p "nginx_debian/etc/nginx/sites-enabled"
 
-dpkg -b nginx_debian "nginx_debian${1}_${NGINX_VERSION_NUMBER}.deb"
+dpkg -b nginx_debian "nginx_${NGINX_VERSION_NUMBER}.openssl_${OPENSSL_VERSION}.debian+${1}.amd64.deb"
+mkdir "${CURRENT_PATH}/release"
