@@ -10,8 +10,9 @@ CURRENT_PATH=$(pwd)
 cd "$CURRENT_PATH/nginx"
 
 # patch for http connect method
-test -f auto/configure && mv auto/configure configure
-patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
+test -f auto/configure \
+  && mv auto/configure configure \
+  && patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
 
 test -d ${CURRENT_PATH}/nginx/objs && make clean
 ./configure \
