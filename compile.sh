@@ -63,10 +63,12 @@ patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.p
     --without-http_memcached_module \
     --without-http_uwsgi_module \
     --without-http_scgi_module \
+    --with-http_auth_basic_module \
     --with-http_gzip_static_module \
     --with-http_ssl_module \
     --with-http_stub_status_module \
     --with-http_v2_module \
+    --with-http_v3_module \
     --with-openssl="${CURRENT_PATH}/openssl" \
     --with-stream \
     --with-stream_ssl_module \
