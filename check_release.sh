@@ -6,6 +6,7 @@ CURRENT_PATH=$(pwd)
 git clone https://github.com/nginx/nginx.git
 git clone https://github.com/openssl/openssl.git
 git clone https://github.com/chobits/ngx_http_proxy_connect_module.git
+git clone https://github.com/aericpp/nginx-proxy.git
 
 # check nginx version
 cd "$CURRENT_PATH/nginx"
@@ -26,11 +27,12 @@ git checkout $OPENSSL_VERSION
 echo $OPENSSL_VERSION > "$CURRENT_PATH/openssl.version"
 
 # check release
-cd "$CURRENT_PATH"
+cd "$CURRENT_PATH/nginx-proxy"
 TAG_NAME=$(echo "v${NGINX_VERSION_NUMBER}-${OPENSSL_VERSION}")
 TAG_EXIST=$(git tag -l ${TAG_NAME})
 
 echo $TAG_NAME > "$CURRENT_PATH/release.version"
+echo $TAG_EXIST > "$CURRENT_PATH/tag.exist"
 
 if [ "$TAG_NAME" == "$TAG_EXIST" ]; then
   echo 0
