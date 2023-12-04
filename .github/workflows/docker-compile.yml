@@ -21,10 +21,13 @@ jobs:
         chmod +x entrypoint.sh
         echo "FLAG=$(bash check_release.sh)" >> $GITHUB_OUTPUT
         echo "TAG_NAME=$(cat release.version)" >> $GITHUB_OUTPUT
+        echo "TAG_EXIST=$(cat tag.exist)" >> $GITHUB_OUTPUT
 
     - name: test
       run: |
         echo ${{ steps.check_release.outputs.FLAG }}
+        echo ${{ steps.check_release.outputs.TAG_NAME }}
+        echo ${{ steps.check_release.outputs.TAG_EXIST }}
 
     # - name: compile nginx-proxy
     #   if: ${{ steps.check_release.outputs.FLAG == 1 }}
