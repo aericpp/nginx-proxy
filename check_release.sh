@@ -20,7 +20,7 @@ git checkout $NGINX_VERSION
 cd "$CURRENT_PATH/openssl"
 OPENSSL_VERSION=$(git log --simplify-by-decoration --pretty="format:%ct %D" --tags \
     | grep openssl-3. \
-    | sort -n -k 1 -t " " -r \
+    | sort -k 2 -t ":" -r \
     | head -n 1 \
     | awk '{print $3}')
 git checkout $OPENSSL_VERSION
