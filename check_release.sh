@@ -10,7 +10,13 @@ git clone https://github.com/aericpp/nginx-proxy.git
 
 # check nginx version
 cd "$CURRENT_PATH/nginx"
-NGINX_VERSION=$(test -f .hgtags && cat .hgtags |tail -n 1 |awk '{print $2}')
+NGINX_VERSION=$(git log --simplify-by-decoration --pretty="format:%ct %D" --tags \
+    | sort -k 1 -t ":" -r \
+    | head -n 5 \
+    | sort -k 2 -t ":" -r \
+    | head -n 1 \
+    | awk '{print $3}') 
+# NGINX_VERSION=$(test -f .hgtags && cat .hgtags |tail -n 1 |awk '{print $2}')
 echo $NGINX_VERSION > "$CURRENT_PATH/nginx.version"
 NGINX_VERSION_NUMBER=$(echo $NGINX_VERSION| cut -c9-)
 echo $NGINX_VERSION_NUMBER > "$CURRENT_PATH/nginx.version.number"
