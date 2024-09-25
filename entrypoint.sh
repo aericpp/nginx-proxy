@@ -77,3 +77,4 @@ test -d "nginx_debian_${1}/etc/nginx/sites-enabled" || mkdir -p "nginx_debian_${
 dpkg -b "nginx_debian_${1}" "nginx_${NGINX_VERSION_NUMBER}.openssl_${OPENSSL_VERSION}.debian+${1}.amd64.deb"
 test -d "${CURRENT_PATH}/release" || mkdir "${CURRENT_PATH}/release"
 cp "nginx_${NGINX_VERSION_NUMBER}.openssl_${OPENSSL_VERSION}.debian+${1}.amd64.deb" "${CURRENT_PATH}/release/"
+cp "nginx_${NGINX_VERSION_NUMBER}.openssl_${OPENSSL_VERSION}.debian+${1}.amd64.deb" "${CURRENT_PATH}/release/nginx.debian+${1}.amd64.deb"
