@@ -22,10 +22,12 @@ NGINX_VERSION_NUMBER=$(echo $NGINX_VERSION| cut -c9-)
 echo $NGINX_VERSION_NUMBER > "$CURRENT_PATH/nginx.version.number"
 git checkout $NGINX_VERSION
 
-# check nginx version
+# check openssl version
 cd "$CURRENT_PATH/openssl"
 OPENSSL_VERSION=$(git log --simplify-by-decoration --pretty="format:%ct %D" --tags \
     | grep openssl-3. \
+    | grep -v alpha \
+    | grep -v beta \
     | sort -k 2 -t ":" -r \
     | head -n 1 \
     | awk '{print $3}')
