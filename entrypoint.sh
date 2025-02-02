@@ -65,9 +65,9 @@ cp -r ${CURRENT_PATH}/nginx/conf/* ${CURRENT_PATH}/nginx_debian_${1}/etc/nginx/
 cd ${CURRENT_PATH}/nginx_debian_${1}
 find ./etc/nginx/ -type f | cut -c2- >> ${CURRENT_PATH}/nginx_debian_${1}/DEBIAN/conffiles
 
-cat ${CURRENT_PATH}/nginx_debian_${1}/DEBIAN/conffiles \
-  | grep -Pv '^$' \
-  > ${CURRENT_PATH}/nginx_debian_${1}/DEBIAN/conffiles
+cat ${CURRENT_PATH}/nginx_debian_${1}/DEBIAN/conffiles
+cat ${CURRENT_PATH}/nginx_debian_${1}/DEBIAN/conffiles | grep -Pv '^$' > ${CURRENT_PATH}/nginx_debian_${1}/DEBIAN/conffiles
+cat ${CURRENT_PATH}/nginx_debian_${1}/DEBIAN/conffiles
 
 NGINX_VERSION_NUMBER=$(cat ${CURRENT_PATH}/nginx.version.number)
 OPENSSL_VERSION=$(cat ${CURRENT_PATH}/openssl.version)
