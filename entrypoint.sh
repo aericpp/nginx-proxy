@@ -51,9 +51,19 @@ make
 cp -r ${CURRENT_PATH}/nginx_debian ${CURRENT_PATH}/nginx_debian_${1}
 
 # get execute file
-test -d ${CURRENT_PATH}/nginx_debian/usr/sbin/ || mkdir -p ${CURRENT_PATH}/nginx_debian_${1}/usr/sbin/
+test -d ${CURRENT_PATH}/nginx_debian/usr/sbin/ \
+  || mkdir -p ${CURRENT_PATH}/nginx_debian_${1}/usr/sbin/
 cp ${CURRENT_PATH}/nginx/objs/nginx ${CURRENT_PATH}/nginx_debian_${1}/usr/sbin/nginx
-cp ${CURRENT_PATH}/nginx/objs/nginx.8 ${CURRENT_PATH}/nginx_debian_${1}/usr/sbin/nginx.8
+gzip ${CURRENT_PATH}/nginx/objs/nginx.8
+test -d ${CURRENT_PATH}/nginx_debian/usr/share/man/man8/ \
+  || mkdir -p ${CURRENT_PATH}/nginx_debian_${1}/usr/share/man/man8/
+cp ${CURRENT_PATH}/nginx/objs/nginx.8.gz ${CURRENT_PATH}/nginx_debian_${1}/usr/share/man/man8/
+cp -r ${CURRENT_PATH}/nginx/contrib/vim ${CURRENT_PATH}/nginx_debian_${1}/usr/share/
+cp -r ${CURRENT_PATH}/nginx/docs/html ${CURRENT_PATH}/nginx_debian_${1}/usr/share/nginx/
+
+cp -r ${CURRENT_PATH}/nginx/conf/* ${CURRENT_PATH}/nginx_debian_${1}/etc/nginx/
+cd ${CURRENT_PATH}/nginx_debian_${1}
+find ./etc/nginx/ -type f | cut -c2- >> ${CURRENT_PATH}/nginx_debian_${1}/DEBIAN/conffiles
 
 NGINX_VERSION_NUMBER=$(cat ${CURRENT_PATH}/nginx.version.number)
 OPENSSL_VERSION=$(cat ${CURRENT_PATH}/openssl.version)
