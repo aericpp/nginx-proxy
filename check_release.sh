@@ -15,7 +15,8 @@ NGINX_VERSION=$(git log --simplify-by-decoration --pretty="format:%ct %D" --tags
     | head -n 5 \
     | sort -k 2 -t ":" -r \
     | head -n 1 \
-    | awk '{print $3}') 
+    | awk '{print $3}' \
+    | awk -F',' '{print $1}')
 # NGINX_VERSION=$(test -f .hgtags && cat .hgtags |tail -n 1 |awk '{print $2}')
 # echo "[debug] NGINX_VERSION: $NGINX_VERSION"
 echo $NGINX_VERSION > "$CURRENT_PATH/nginx.version"
