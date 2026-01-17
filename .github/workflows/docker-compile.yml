@@ -43,6 +43,13 @@ jobs:
         entrypoint: /github/workspace/entrypoint.sh
         args: 12
 
+    - name: compile nginx-proxy
+      if: ${{ steps.check_release.outputs.FLAG == 1 }}
+      uses: docker://debian:13-slim
+      with:
+        entrypoint: /github/workspace/entrypoint.sh
+        args: 13
+
     - name: upload artifact
       if: ${{ steps.check_release.outputs.FLAG == 1 }}
       uses: actions/upload-artifact@master
