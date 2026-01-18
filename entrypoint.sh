@@ -6,13 +6,17 @@ apt install -qy build-essential libpcre3-dev zlib1g-dev git
 
 CURRENT_PATH=$(pwd)
 
+if [ ! -f "${CURRENT_PATH}/ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102904.patch" ]; then
+    mv ${CURRENT_PATH}/nginx-proxy/reference/proxy_connect_rewrite_102904.patch ${CURRENT_PATH}/ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102904.patch
+fi
+
 # compile nginx-proxy
 cd "$CURRENT_PATH/nginx"
 
 # patch for http connect method
 test -f auto/configure \
   && mv auto/configure configure \
-  && patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102101.patch
+  && patch -p1 <../ngx_http_proxy_connect_module/patch/proxy_connect_rewrite_102904.patch
 
 test -d ${CURRENT_PATH}/nginx/objs && make clean
 ./configure \
