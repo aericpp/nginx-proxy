@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-source /etc/os-release
+. /etc/os-release
 
 apt update
 
