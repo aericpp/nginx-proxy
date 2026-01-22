@@ -1,8 +1,15 @@
 #!/bin/sh
 set -eu
 
+source /etc/os-release
+
 apt update
-apt install -qy build-essential libpcre3-dev zlib1g-dev git
+
+if [ $VERSION_ID -eq 13 ]; then
+    apt install -qy build-essential libpcre2-dev zlib1g-dev git
+else
+    apt install -qy build-essential libpcre3-dev zlib1g-dev git
+fi
 
 CURRENT_PATH=$(pwd)
 
